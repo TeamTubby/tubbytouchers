@@ -4,18 +4,19 @@ using System.Collections;
 public class Tubby : MonoBehaviour {
 
     public PLAYER ePlayer;
+    public GameObject oCamera;
 
-    private const float fMaxAccel = 10;
+    private const float fMaxAccel = 50;
     private const float fMinAccel = 1;
     private const float fMaxVelocity = 30;
     private const float fAccelPenaltyPerItem = 1;
 
     private int iStackSize = 0;
     private float fAccelMag = 0;
-    private float fAccelH = 0;
-    private float fAccelV = 0;
-    private float fVelocityH = 0;
-    private float fVelocityV = 0;
+    private float fAccelX = 0;
+    private float fAccelY = 0;
+    private float fVelocityX = 0;
+    private float fVelocityY = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -26,9 +27,12 @@ public class Tubby : MonoBehaviour {
 	void Update () {
 
         SetAccelMag();
-        SetAccelH();
-        SetAccelV();
+        SetAccelX();
+        SetAccelY();
         ScaleAccel();
+        SetVelocityX();
+        SetVelocityY();
+        Move();
 
 	}
 
@@ -41,72 +45,175 @@ public class Tubby : MonoBehaviour {
         }
     }
 
-    void SetAccelH()
+    void SetAccelX()
     {
-        fAccelH = 0;
+        fAccelX = 0;
 
-        if (Input.GetButton("d"))
+        if (ePlayer == PLAYER.PLAYER_1)
         {
-            fAccelH += fAccelMag;
+            if (Input.GetKey(KeyCode.D))
+            {
+                fAccelX += fAccelMag;
+            }
+
+            if (Input.GetKey(KeyCode.A))
+            {
+                fAccelX -= fAccelMag;
+            }
         }
-
-        if (Input.GetButton("a"))
+        else
         {
-            fAccelH -= fAccelMag;
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                fAccelX += fAccelMag;
+            }
+
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                fAccelX -= fAccelMag;
+            }
         }
     }
 
-    void SetAccelV()
+    void SetAccelY()
     {
-        fAccelV = 0;
+        fAccelY = 0;
 
-        if (Input.GetButton("w"))
+        if (ePlayer == PLAYER.PLAYER_1)
         {
-            fAccelV += fAccelMag;
+            if (Input.GetKey(KeyCode.W))
+            {
+                fAccelY += fAccelMag;
+            }
+
+            if (Input.GetKey(KeyCode.S))
+            {
+                fAccelY -= fAccelMag;
+            }
         }
-
-        if (Input.GetButton("s"))
+        else
         {
-            fAccelV -= fAccelMag;
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                fAccelY += fAccelMag;
+            }
+
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                fAccelY -= fAccelMag;
+            }
         }
     }
 
     void ScaleAccel()
     {
-        if (Mathf.Abs(fAccelH) + Mathf.Abs(fAccelV) > fAccelMag)
+        if (Mathf.Abs(fAccelX) + Mathf.Abs(fAccelY) > fAccelMag)
         {
-            fAccelH = fAccelH / 2;
-            fAccelV = fAccelV / 2;
+            fAccelX = fAccelX / 2;
+            fAccelY = fAccelY / 2;
         }
     }
 
-    void SetVelocityH()
+    void SetVelocityX()
     {
-        if (fVelocityH == 0)
+        fVelocityX += fAccelX * Time.deltaTime;
+        /*if (fVelocityX == 0)
         {
-            fVelocityH += fAccelH;
+            fVelocityX += fAccelX * Time.deltaTime;
         }
-        else if (fVelocityH < 0)
+        else if (fVelocityX < 0)
         {
-            if (fAccelH < 0)
+            if (fAccelX < 0)
             {
-                fVelocityH += fAccelH;
+                fVelocityX += fAccelX * Time.deltaTime;
             }
             else
             {
-                fVelocityH = 0;
+                fVelocityX = 0;
             }
         }
-        else if (fVelocityH > 0)
+        else if (fVelocityX > 0)
         {
-            if (fVelocityH > 0)
+            if (fAccelX > 0)
             {
-                fVelocityH += fAccelH;
+                fVelocityX += fAccelX * Time.deltaTime;
             }
             else
             {
-                fVelocityH = 0;
+                fVelocityX = 0;
             }
+        }*/
+    }
+
+    void SetVelocityY()
+    {
+        fVelocityY += fAccelY * Time.deltaTime;
+        /*if (fVelocityY == 0)
+        {
+            fVelocityY += fAccelY * Time.deltaTime;
+        }
+        else if (fVelocityY < 0)
+        {
+            if (fAccelY < 0)
+            {
+                fVelocityY += fAccelY * Time.deltaTime;
+            }
+            else
+            {
+                fVelocityY = 0;
+            }
+        }
+        else if (fVelocityY > 0)
+        {
+            if (fAccelY > 0)
+            {
+                fVelocityY += fAccelY * Time.deltaTime;
+            }
+            else
+            {
+                fVelocityY = 0;
+            }
+        }*/
+    }
+
+    void ScaleVelocity()
+    {
+        if (Mathf.Abs(fVelocityX) + Mathf.Abs(fVelocityY) > fAccelMag)
+        {
+            fVelocityX = fVelocityX / 2;
+            fVelocityY = fVelocityY / 2;
+        }
+    }
+
+    void Move()
+    {
+        float MovementX = fVelocityX * Time.deltaTime;
+        float MovementY = fVelocityY * Time.deltaTime;
+        transform.Translate(MovementX, MovementY, 0);
+        Vector3 ScreenPos = oCamera.GetComponent<Camera>().WorldToViewportPoint(transform.position);
+        if (ScreenPos.x < 0)
+        {
+            ScreenPos.x = 0;
+            transform.position = oCamera.GetComponent<Camera>().ViewportToWorldPoint(ScreenPos);
+            fVelocityX = 0;
+        }
+        else if (ScreenPos.x > 1)
+        {
+            ScreenPos.x = 1;
+            transform.position = oCamera.GetComponent<Camera>().ViewportToWorldPoint(ScreenPos);
+            fVelocityX = 0;
+        }
+        if (ScreenPos.y < 0)
+        {
+            ScreenPos.y = 0;
+            transform.position = oCamera.GetComponent<Camera>().ViewportToWorldPoint(ScreenPos);
+            fVelocityY = 0;
+        }
+        else if (ScreenPos.y > 1)
+        {
+            ScreenPos.y = 1;
+            transform.position = oCamera.GetComponent<Camera>().ViewportToWorldPoint(ScreenPos);
+            fVelocityY = 0;
         }
     }
 }
