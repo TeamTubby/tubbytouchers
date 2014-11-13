@@ -20,7 +20,7 @@ public class Tubby : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+        renderer.material.color = new Color(0, 1, 0);
 	}
 	
 	// Update is called once per frame
@@ -185,12 +185,20 @@ public class Tubby : MonoBehaviour {
         }
     }
 
+    /*void OnCollisionEnter(Collision a_object)
+    {
+        fAccelX = 0;
+        fAccelY = 0;
+        fVelocityX = 0;
+        fVelocityY = 0;
+    }*/
+
     void Move()
     {
         float MovementX = fVelocityX * Time.deltaTime;
         float MovementY = fVelocityY * Time.deltaTime;
         transform.Translate(MovementX, MovementY, 0);
-        Vector3 ScreenPos = oCamera.GetComponent<Camera>().WorldToViewportPoint(transform.position);
+        /*Vector3 ScreenPos = oCamera.GetComponent<Camera>().WorldToViewportPoint(transform.position);
         if (ScreenPos.x < 0)
         {
             ScreenPos.x = 0;
@@ -214,6 +222,6 @@ public class Tubby : MonoBehaviour {
             ScreenPos.y = 1;
             transform.position = oCamera.GetComponent<Camera>().ViewportToWorldPoint(ScreenPos);
             fVelocityY = 0;
-        }
+        }*/
     }
 }
