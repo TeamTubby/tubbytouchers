@@ -15,8 +15,6 @@ public class Tubby : MonoBehaviour {
     private float fAccelMag = 0;
     private float fAccelX = 0;
     private float fAccelY = 0;
-    private float fVelocityX = 0;
-    private float fVelocityY = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -30,8 +28,6 @@ public class Tubby : MonoBehaviour {
         SetAccelX();
         SetAccelY();
         ScaleAccel();
-        SetVelocityX();
-        SetVelocityY();
         Move();
 
 	}
@@ -114,66 +110,14 @@ public class Tubby : MonoBehaviour {
         }
     }
 
-    void SetVelocityX()
+    /*void SetVelocityX()
     {
         fVelocityX += fAccelX * Time.deltaTime;
-        /*if (fVelocityX == 0)
-        {
-            fVelocityX += fAccelX * Time.deltaTime;
-        }
-        else if (fVelocityX < 0)
-        {
-            if (fAccelX < 0)
-            {
-                fVelocityX += fAccelX * Time.deltaTime;
-            }
-            else
-            {
-                fVelocityX = 0;
-            }
-        }
-        else if (fVelocityX > 0)
-        {
-            if (fAccelX > 0)
-            {
-                fVelocityX += fAccelX * Time.deltaTime;
-            }
-            else
-            {
-                fVelocityX = 0;
-            }
-        }*/
     }
 
     void SetVelocityY()
     {
         fVelocityY += fAccelY * Time.deltaTime;
-        /*if (fVelocityY == 0)
-        {
-            fVelocityY += fAccelY * Time.deltaTime;
-        }
-        else if (fVelocityY < 0)
-        {
-            if (fAccelY < 0)
-            {
-                fVelocityY += fAccelY * Time.deltaTime;
-            }
-            else
-            {
-                fVelocityY = 0;
-            }
-        }
-        else if (fVelocityY > 0)
-        {
-            if (fAccelY > 0)
-            {
-                fVelocityY += fAccelY * Time.deltaTime;
-            }
-            else
-            {
-                fVelocityY = 0;
-            }
-        }*/
     }
 
     void ScaleVelocity()
@@ -183,21 +127,17 @@ public class Tubby : MonoBehaviour {
             fVelocityX = fVelocityX / 2;
             fVelocityY = fVelocityY / 2;
         }
-    }
-
-    /*void OnCollisionEnter(Collision a_object)
-    {
-        fAccelX = 0;
-        fAccelY = 0;
-        fVelocityX = 0;
-        fVelocityY = 0;
     }*/
+
+    void OnCollisionStay(Collision a_object)
+    {
+        rigidbody.velocity = Vector3.zero;
+    }
 
     void Move()
     {
-        float MovementX = fVelocityX * Time.deltaTime;
-        float MovementY = fVelocityY * Time.deltaTime;
-        transform.Translate(MovementX, MovementY, 0);
+        rigidbody.AddForce(Vector3.up * fAccelY);
+        rigidbody.AddForce(Vector3.right * fAccelX);
         /*Vector3 ScreenPos = oCamera.GetComponent<Camera>().WorldToViewportPoint(transform.position);
         if (ScreenPos.x < 0)
         {
