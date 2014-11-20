@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Wall : MonoBehaviour {
+public class Food : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

@@ -8,6 +8,7 @@ public class Tubby : MonoBehaviour {
 
     private const float fMaxAccel = 100;
     private const float fMinAccel = 1;
+    private const float fDecel = 10;
     private const float fMaxVelocity = 30;
     private const float fAccelPenaltyPerItem = 1;
 
@@ -16,11 +17,20 @@ public class Tubby : MonoBehaviour {
     private float fAccelX = 0;
     private float fAccelY = 0;
 
+    Vector3 oTempPos1;
+    Vector3 oTempPos2;
+
 	// Use this for initialization
 	void Start () {
         renderer.material.color = new Color(0, 1, 0);
 	}
-	
+
+    void FixedUpdate()
+    {
+        oTempPos2 = oTempPos1;
+        oTempPos1 = transform.position;
+    }
+
 	// Update is called once per frame
 	void Update () {
 
@@ -31,6 +41,20 @@ public class Tubby : MonoBehaviour {
         Move();
 
 	}
+
+    void OnCollisionEnter(Collision a_object)
+    {
+        rigidbody.velocity = Vector3.zero;
+        transform.position = oTempPos2;
+    }
+
+    void OnTriggerEnter(Collider a_object)
+    {
+        if (a_object.tag == "Food")
+        {
+            
+        }
+    }
 
     void SetAccelMag()
     {
@@ -131,39 +155,35 @@ public class Tubby : MonoBehaviour {
         }
     }*/
 
-    void OnCollisionStay(Collision a_object)
-    {
-        rigidbody.velocity = Vector3.zero;
-    }
-
     void Move()
     {
         rigidbody.AddForce(Vector3.up * fAccelY);
         rigidbody.AddForce(Vector3.right * fAccelX);
-        /*Vector3 ScreenPos = oCamera.GetComponent<Camera>().WorldToViewportPoint(transform.position);
+
+        Vector3 ScreenPos = oCamera.GetComponent<Camera>().WorldToViewportPoint(transform.position);
         if (ScreenPos.x < 0)
         {
             ScreenPos.x = 0;
             transform.position = oCamera.GetComponent<Camera>().ViewportToWorldPoint(ScreenPos);
-            fVelocityX = 0;
+            rigidbody.velocity = Vector3.zero;
         }
         else if (ScreenPos.x > 1)
         {
             ScreenPos.x = 1;
             transform.position = oCamera.GetComponent<Camera>().ViewportToWorldPoint(ScreenPos);
-            fVelocityX = 0;
+            rigidbody.velocity = Vector3.zero;
         }
         if (ScreenPos.y < 0)
         {
             ScreenPos.y = 0;
             transform.position = oCamera.GetComponent<Camera>().ViewportToWorldPoint(ScreenPos);
-            fVelocityY = 0;
+            rigidbody.velocity = Vector3.zero;
         }
         else if (ScreenPos.y > 1)
         {
             ScreenPos.y = 1;
             transform.position = oCamera.GetComponent<Camera>().ViewportToWorldPoint(ScreenPos);
-            fVelocityY = 0;
-        }*/
+            rigidbody.velocity = Vector3.zero;
+        }
     }
 }
