@@ -6,7 +6,7 @@ public class Tubby : MonoBehaviour {
     public PLAYER ePlayer;
     public GameObject oCamera;
 
-    private const float fMaxAccel = 50;
+    private const float fMaxAccel = 100;
     private const float fMinAccel = 1;
     private const float fMaxVelocity = 30;
     private const float fAccelPenaltyPerItem = 1;
@@ -122,6 +122,8 @@ public class Tubby : MonoBehaviour {
 
     void ScaleVelocity()
     {
+        
+        
         if (Mathf.Abs(fVelocityX) + Mathf.Abs(fVelocityY) > fAccelMag)
         {
             fVelocityX = fVelocityX / 2;
