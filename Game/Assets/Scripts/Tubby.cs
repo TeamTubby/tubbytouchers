@@ -22,7 +22,14 @@ public class Tubby : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        renderer.material.color = new Color(0, 1, 0);
+		if (ePlayer == PLAYER.PLAYER_1)
+		{
+        	renderer.material.color = new Color(0, 1, 0);
+		}
+		if (ePlayer == PLAYER.PLAYER_2)
+		{
+			renderer.material.color = new Color(0, 0, 1);
+		}
 	}
 
     void FixedUpdate()
@@ -70,24 +77,24 @@ public class Tubby : MonoBehaviour {
 
         if (ePlayer == PLAYER.PLAYER_1)
         {
-            if (Input.GetKey(KeyCode.D))
+            if (Input.GetKey(KeyCode.D) || Input.GetAxis("P1_360_leftX") >0)
             {
                 fAccelX += fAccelMag;
             }
 
-            if (Input.GetKey(KeyCode.A))
+			if (Input.GetKey(KeyCode.A) || Input.GetAxis("P1_360_leftX") <0)
             {
                 fAccelX -= fAccelMag;
             }
         }
         else
         {
-            if (Input.GetKey(KeyCode.RightArrow))
+			if (Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("P2_360_leftX") >0)
             {
                 fAccelX += fAccelMag;
             }
 
-            if (Input.GetKey(KeyCode.LeftArrow))
+			if (Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("P2_360_leftX") <0)
             {
                 fAccelX -= fAccelMag;
             }
@@ -100,24 +107,24 @@ public class Tubby : MonoBehaviour {
 
         if (ePlayer == PLAYER.PLAYER_1)
         {
-            if (Input.GetKey(KeyCode.W))
+			if (Input.GetKey(KeyCode.W) || Input.GetAxis("P1_360_leftY") <0)
             {
                 fAccelY += fAccelMag;
             }
 
-            if (Input.GetKey(KeyCode.S))
+			if (Input.GetKey(KeyCode.S) || Input.GetAxis("P1_360_leftY") >0)
             {
                 fAccelY -= fAccelMag;
             }
         }
         else
         {
-            if (Input.GetKey(KeyCode.UpArrow))
+			if (Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("P2_360_leftY") <0)
             {
                 fAccelY += fAccelMag;
             }
 
-            if (Input.GetKey(KeyCode.DownArrow))
+			if (Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("P2_360_leftY") >0)
             {
                 fAccelY -= fAccelMag;
             }
