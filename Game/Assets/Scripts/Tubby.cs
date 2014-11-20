@@ -7,7 +7,7 @@ public class Tubby : MonoBehaviour {
     public GameObject oCamera;
 
     private const float fMaxAccel = 100;
-    private const float fMinAccel = 1;
+    private const float fMinAccel = 100;
     private const float fDecel = 10;
     private const float fMaxVelocity = 30;
     private const float fAccelPenaltyPerItem = 1;
@@ -39,7 +39,6 @@ public class Tubby : MonoBehaviour {
         SetAccelY();
         ScaleAccel();
         Move();
-
 	}
 
     void OnCollisionEnter(Collision a_object)
