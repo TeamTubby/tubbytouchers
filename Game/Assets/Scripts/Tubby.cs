@@ -17,6 +17,9 @@ public class Tubby : MonoBehaviour {
     private float fAccelX = 0;
     private float fAccelY = 0;
 
+	public int foodstack1 = 0;
+	public int foodstack2 = 0;
+
     Vector3 oTempPos1;
     Vector3 oTempPos2;
 
@@ -40,13 +43,14 @@ public class Tubby : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-
         SetAccelMag();
         SetAccelX();
         SetAccelY();
         ScaleAccel();
         Move();
+
 	}
+
 
     void OnCollisionEnter(Collision a_object)
     {
@@ -58,7 +62,14 @@ public class Tubby : MonoBehaviour {
     {
         if (a_object.tag == "Food")
         {
-            
+			if (ePlayer == PLAYER.PLAYER_1)
+			{
+				foodstack1 = foodstack1 + 1;
+			}
+			if (ePlayer == PLAYER.PLAYER_2)
+			{
+				foodstack2 = foodstack2 + 1;
+			}
         }
     }
 

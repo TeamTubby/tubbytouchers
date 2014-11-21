@@ -48,6 +48,8 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Enums.cs" />
      <Compile Include="Assets\Scripts\Food.cs" />
+     <Compile Include="Assets\Scripts\FoodDrops.cs" />
+     <Compile Include="Assets\Scripts\Player1Score.cs" />
      <Compile Include="Assets\Scripts\Tubby.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
