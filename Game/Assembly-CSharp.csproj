@@ -51,6 +51,7 @@
      <Compile Include="Assets\Scripts\FoodDrops.cs" />
      <Compile Include="Assets\Scripts\Player1Score.cs" />
      <Compile Include="Assets\Scripts\Tubby.cs" />
+     <Compile Include="Assets\Scripts\countDown.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
