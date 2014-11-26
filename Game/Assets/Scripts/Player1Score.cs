@@ -8,10 +8,11 @@ public class Player1Score : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		guiText.text = "Player 1 Score "+test;
+		guiText.text = "Player 1 Score 0";
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		guiText.text = "Player 1 Score "+ test;
 	}
 }

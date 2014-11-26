@@ -3,7 +3,7 @@ using System.Collections;
 
 public class countDown : MonoBehaviour {
 
-	public float timeLeft = 60;
+	public float timeLeft = 5;
 
 	// Use this for initialization
 	void Start () {
@@ -14,5 +14,14 @@ public class countDown : MonoBehaviour {
 	void Update () {
 		timeLeft -= Time.deltaTime;
 		guiText.text = Mathf.Round(timeLeft).ToString();
+		gameOver();
 	}
+
+	void gameOver(){
+			if (timeLeft <= 0)
+			{
+				// Call End Game.
+				//print("DIEDIDIDID");
+			}
+		}
 }

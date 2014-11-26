@@ -15,10 +15,13 @@ public class Tubby : MonoBehaviour {
     private int iStackSize = 0;
     private float fAccelMag = 0;
     private float fAccelX = 0;
-    private float fAccelY = 0;
+	private float fAccelY = 0;
+	
+	public int player_1_score = 0;
+	public int player_2_score = 0;
 
-	public int foodstack1 = 0;
-	public int foodstack2 = 0;
+	public int player_1_foodstack = 0;
+	public int player_2_foodstack = 0;
 
     Vector3 oTempPos1;
     Vector3 oTempPos2;
@@ -48,7 +51,7 @@ public class Tubby : MonoBehaviour {
         SetAccelY();
         ScaleAccel();
         Move();
-
+		nomNom();
 	}
 
 
@@ -64,14 +67,32 @@ public class Tubby : MonoBehaviour {
         {
 			if (ePlayer == PLAYER.PLAYER_1)
 			{
-				foodstack1 = foodstack1 + 1;
+				player_1_foodstack = player_1_foodstack + 1;
 			}
 			if (ePlayer == PLAYER.PLAYER_2)
 			{
-				foodstack2 = foodstack2 + 1;
+				player_2_foodstack = player_2_foodstack + 1;
 			}
         }
     }
+
+	void nomNom()
+	{			
+		if (ePlayer == PLAYER.PLAYER_1)
+		{
+			if (Input.GetKey(KeyCode.Q))
+				{
+					player_1_score = player_1_foodstack;
+				}
+			}
+			else
+			{
+				if (Input.GetKey(KeyCode.RightControl))
+				{
+				player_2_score = player_1_foodstack;
+				}
+			}
+	}
 
     void SetAccelMag()
     {

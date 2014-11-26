@@ -1,9 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\countDown.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Tubby.cs">
     <Files>
-      <File FileName="Assets\Scripts\countDown.cs" Line="16" Column="50" />
-      <File FileName="Assets\Scripts\FoodDrops.cs" Line="12" Column="28" />
+      <File FileName="Assets\Scripts\Player1Score.cs" Line="12" Column="3" />
+      <File FileName="Assets\Scripts\Tubby.cs" Line="85" Column="6" />
+      <File FileName="Assets\Scripts\countDown.cs" Line="6" Column="28" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
