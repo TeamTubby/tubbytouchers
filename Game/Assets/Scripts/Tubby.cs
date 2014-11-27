@@ -6,6 +6,8 @@ public class Tubby : MonoBehaviour {
     public PLAYER ePlayer;
     public GameObject oCamera;
 
+    private GameManager oGameManager;
+
     private const float fMaxAccel = 100;
     private const float fMinAccel = 100;
     private const float fDecel = 10;
@@ -16,18 +18,16 @@ public class Tubby : MonoBehaviour {
     private float fAccelMag = 0;
     private float fAccelX = 0;
 	private float fAccelY = 0;
-	
-	public int player_1_score = 0;
-	public int player_2_score = 0;
-
-	public int player_1_foodstack = 0;
-	public int player_2_foodstack = 0;
 
     Vector3 oTempPos1;
     Vector3 oTempPos2;
 
 	// Use this for initialization
 	void Start () {
+        
+        GameObject Temp = GameObject.Find("GameManager");
+        oGameManager = Temp.GetComponent<GameManager>();
+
 		if (ePlayer == PLAYER.PLAYER_1)
 		{
         	renderer.material.color = new Color(0, 1, 0);
@@ -36,6 +36,7 @@ public class Tubby : MonoBehaviour {
 		{
 			renderer.material.color = new Color(0, 0, 1);
 		}
+
 	}
 
     void FixedUpdate()
@@ -51,47 +52,45 @@ public class Tubby : MonoBehaviour {
         SetAccelY();
         ScaleAccel();
         Move();
-		nomNom();
+		EatCheck();
 	}
 
 
     void OnCollisionEnter(Collision a_object)
     {
+        Debug.Log("Collision");
         rigidbody.velocity = Vector3.zero;
         transform.position = oTempPos2;
     }
 
     void OnTriggerEnter(Collider a_object)
     {
+        Debug.Log("Collision");
         if (a_object.tag == "Food")
         {
-			if (ePlayer == PLAYER.PLAYER_1)
-			{
-				player_1_foodstack = player_1_foodstack + 1;
-			}
-			if (ePlayer == PLAYER.PLAYER_2)
-			{
-				player_2_foodstack = player_2_foodstack + 1;
-			}
+            iStackSize += 1;
+            Destroy( a_object.gameObject );
         }
     }
 
-	void nomNom()
+    void EatCheck()
 	{			
 		if (ePlayer == PLAYER.PLAYER_1)
 		{
 			if (Input.GetKey(KeyCode.Q))
-				{
-					player_1_score = player_1_foodstack;
-				}
-			}
-			else
 			{
-				if (Input.GetKey(KeyCode.RightControl))
-				{
-				player_2_score = player_1_foodstack;
-				}
+                oGameManager.AddPoints(ePlayer, iStackSize);
+				iStackSize = 0;
 			}
+		}
+		else
+		{
+			if (Input.GetKey(KeyCode.RightControl))
+			{
+                oGameManager.AddPoints(ePlayer, iStackSize);
+			    iStackSize = 0;
+			}
+		}
 	}
 
     void SetAccelMag()
@@ -172,29 +171,12 @@ public class Tubby : MonoBehaviour {
         }
     }
 
-    /*void SetVelocityX()
-    {
-        fVelocityX += fAccelX * Time.deltaTime;
-    }
-
-    void SetVelocityY()
-    {
-        fVelocityY += fAccelY * Time.deltaTime;
-    }
-
-    void ScaleVelocity()
-    {
-        
-        
-        if (Mathf.Abs(fVelocityX) + Mathf.Abs(fVelocityY) > fAccelMag)
-        {
-            fVelocityX = fVelocityX / 2;
-            fVelocityY = fVelocityY / 2;
-        }
-    }*/
-
     void Move()
     {
+        if (ePlayer == PLAYER.PLAYER_1)
+        {
+            Debug.Log(fAccelY);
+        }
         rigidbody.AddForce(Vector3.up * fAccelY);
         rigidbody.AddForce(Vector3.right * fAccelX);
 

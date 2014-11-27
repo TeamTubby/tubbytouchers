@@ -13,8 +13,4 @@ public class Food : MonoBehaviour {
 	
 	}
 
-	void OnTriggerEnter(Collider a_object)
-	{
-		Destroy(gameObject);
-	}
 }
