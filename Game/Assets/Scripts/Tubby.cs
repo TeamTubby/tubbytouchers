@@ -5,14 +5,18 @@ public class Tubby : MonoBehaviour {
 
     public PLAYER ePlayer;
     public GameObject oCamera;
+    public float fFrictionCoefficient;
 
     private GameManager oGameManager;
 
-    private const float fMaxAccel = 100;
-    private const float fMinAccel = 100;
-    private const float fDecel = 10;
-    private const float fMaxVelocity = 30;
-    private const float fAccelPenaltyPerItem = 1;
+    //private const float fMaxAccel = 100;
+    //private const float fMinAccel = 40;
+    //private const float fDecel = 30;
+    private const float fMaxVelocity = 100;
+    //private const float fAccelPenaltyPerItem = 10;
+
+    private float fMass = 1;
+    private float fFoodMass = 1;
 
     private int iStackSize = 0;
     private float fAccelMag = 0;
@@ -58,14 +62,12 @@ public class Tubby : MonoBehaviour {
 
     void OnCollisionEnter(Collision a_object)
     {
-        Debug.Log("Collision");
         rigidbody.velocity = Vector3.zero;
         transform.position = oTempPos2;
     }
 
     void OnTriggerEnter(Collider a_object)
     {
-        Debug.Log("Collision");
         if (a_object.tag == "Food")
         {
             iStackSize += 1;
@@ -173,12 +175,83 @@ public class Tubby : MonoBehaviour {
 
     void Move()
     {
-        if (ePlayer == PLAYER.PLAYER_1)
+
+        rigidbody.AddForce( Vector3.up * (fAccelY - (9.8f * fFrictionCoefficient * rigidbody.velocity.y) ) );
+
+        rigidbody.AddForce( Vector3.right * (fAccelX - (9.8f * fFrictionCoefficient * rigidbody.velocity.x) ) );
+
+        //rigidbody.AddForce(Vector3.right * fAccelX);
+
+        float fVelocityX = rigidbody.velocity.x;
+        float fVelocityY = rigidbody.velocity.y;
+        float fVelocityMag = Mathf.Sqrt(Mathf.Pow(fVelocityX, 2) + Mathf.Pow(fVelocityY, 2));
+
+        if (fVelocityMag > fMaxVelocity)
         {
-            Debug.Log(fAccelY);
+            float fRadians = Mathf.Atan(fVelocityY / fVelocityX);
+            bool bPositiveX;
+            bool bPositiveY;
+
+            if (fVelocityX >= 0)
+            {
+                bPositiveX = true;
+            }
+            else
+            {
+                bPositiveX = false;
+            }
+
+            if (fVelocityY >= 0)
+            {
+                bPositiveY = true;
+            }
+            else
+            {
+                bPositiveY = false;
+            }
+
+            fVelocityMag = fMaxVelocity;
+            fVelocityX = fVelocityMag * Mathf.Cos(fRadians);
+            fVelocityY = fVelocityMag * Mathf.Sin(fRadians);
+
+            if (bPositiveX == true)
+            {
+                if (fVelocityX < 0)
+                {
+                    fVelocityX = fVelocityX * -1;
+                }
+            }
+            else
+            {
+                if (fVelocityX > 0)
+                {
+                    fVelocityX = fVelocityX * -1;
+                }
+            }
+
+            if (bPositiveY == true)
+            {
+                if (fVelocityY < 0)
+                {
+                    fVelocityY = fVelocityY * -1;
+                }
+            }
+            else
+            {
+                if (fVelocityY > 0)
+                {
+                    fVelocityY = fVelocityY * -1;
+                }
+            }
+
+            rigidbody.velocity = new Vector3(fVelocityX, fVelocityY, 0);
+
+            if (ePlayer == PLAYER.PLAYER_1)
+            {
+                Debug.Log(rigidbody.velocity);
+            }
+
         }
-        rigidbody.AddForce(Vector3.up * fAccelY);
-        rigidbody.AddForce(Vector3.right * fAccelX);
 
         Vector3 ScreenPos = oCamera.GetComponent<Camera>().WorldToViewportPoint(transform.position);
         if (ScreenPos.x < 0)
