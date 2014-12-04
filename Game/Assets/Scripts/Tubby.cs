@@ -6,22 +6,17 @@ public class Tubby : MonoBehaviour {
     public PLAYER ePlayer;
     public GameObject oCamera;
     public float fFrictionCoefficient;
+    public float fRunningForce;
+    public float fMaxVelocity;
+    public float fPlayerMass;
 
     private GameManager oGameManager;
 
-    //private const float fMaxAccel = 100;
-    //private const float fMinAccel = 40;
-    //private const float fDecel = 30;
-    private const float fMaxVelocity = 100;
-    //private const float fAccelPenaltyPerItem = 10;
-
-    private float fMass = 1;
     private float fFoodMass = 1;
-
     private int iStackSize = 0;
-    private float fAccelMag = 0;
-    private float fAccelX = 0;
-	private float fAccelY = 0;
+
+    private float fForceX = 0;
+    private float fForceY = 0;
 
     Vector3 oTempPos1;
     Vector3 oTempPos2;
@@ -41,6 +36,8 @@ public class Tubby : MonoBehaviour {
 			renderer.material.color = new Color(0, 0, 1);
 		}
 
+        rigidbody.mass = fPlayerMass;
+
 	}
 
     void FixedUpdate()
@@ -51,14 +48,12 @@ public class Tubby : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        SetAccelMag();
-        SetAccelX();
-        SetAccelY();
-        ScaleAccel();
+        GetForceX();
+        GetForceY();
+        ScaleForce();
         Move();
 		EatCheck();
 	}
-
 
     void OnCollisionEnter(Collision a_object)
     {
@@ -71,116 +66,85 @@ public class Tubby : MonoBehaviour {
         if (a_object.tag == "Food")
         {
             iStackSize += 1;
+            rigidbody.mass += fFoodMass;
             Destroy( a_object.gameObject );
         }
     }
 
-    void EatCheck()
-	{			
-		if (ePlayer == PLAYER.PLAYER_1)
-		{
-			if (Input.GetKey(KeyCode.Q))
-			{
-                oGameManager.AddPoints(ePlayer, iStackSize);
-				iStackSize = 0;
-			}
-		}
-		else
-		{
-			if (Input.GetKey(KeyCode.RightControl))
-			{
-                oGameManager.AddPoints(ePlayer, iStackSize);
-			    iStackSize = 0;
-			}
-		}
-	}
-
-    void SetAccelMag()
+    void GetForceX()
     {
-        fAccelMag = fMaxAccel - (fAccelPenaltyPerItem * iStackSize);
-        if (fAccelMag < fMinAccel)
-        {
-            fAccelMag = fMinAccel;
-        }
-    }
-
-    void SetAccelX()
-    {
-        fAccelX = 0;
+        fForceX = 0;
 
         if (ePlayer == PLAYER.PLAYER_1)
         {
-            if (Input.GetKey(KeyCode.D) || Input.GetAxis("P1_360_leftX") >0)
+            if (Input.GetKey(KeyCode.D) || Input.GetAxis("P1_360_leftX") > 0)
             {
-                fAccelX += fAccelMag;
+                fForceX += fRunningForce;
             }
 
-			if (Input.GetKey(KeyCode.A) || Input.GetAxis("P1_360_leftX") <0)
+            if (Input.GetKey(KeyCode.A) || Input.GetAxis("P1_360_leftX") < 0)
             {
-                fAccelX -= fAccelMag;
+                fForceX -= fRunningForce;
             }
         }
         else
         {
-			if (Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("P2_360_leftX") >0)
+            if (Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("P2_360_leftX") > 0)
             {
-                fAccelX += fAccelMag;
+                fForceX += fRunningForce;
             }
 
-			if (Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("P2_360_leftX") <0)
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("P2_360_leftX") < 0)
             {
-                fAccelX -= fAccelMag;
+                fForceX -= fRunningForce;
             }
         }
     }
 
-    void SetAccelY()
+    void GetForceY()
     {
-        fAccelY = 0;
+        fForceY = 0;
 
         if (ePlayer == PLAYER.PLAYER_1)
         {
-			if (Input.GetKey(KeyCode.W) || Input.GetAxis("P1_360_leftY") <0)
+            if (Input.GetKey(KeyCode.W) || Input.GetAxis("P1_360_leftY") < 0)
             {
-                fAccelY += fAccelMag;
+                fForceY += fRunningForce;
             }
 
-			if (Input.GetKey(KeyCode.S) || Input.GetAxis("P1_360_leftY") >0)
+            if (Input.GetKey(KeyCode.S) || Input.GetAxis("P1_360_leftY") > 0)
             {
-                fAccelY -= fAccelMag;
+                fForceY -= fRunningForce;
             }
         }
         else
         {
-			if (Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("P2_360_leftY") <0)
+            if (Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("P2_360_leftY") < 0)
             {
-                fAccelY += fAccelMag;
+                fForceY += fRunningForce;
             }
 
-			if (Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("P2_360_leftY") >0)
+            if (Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("P2_360_leftY") > 0)
             {
-                fAccelY -= fAccelMag;
+                fForceY -= fRunningForce;
             }
         }
     }
 
-    void ScaleAccel()
+    void ScaleForce()
     {
-        if (Mathf.Abs(fAccelX) + Mathf.Abs(fAccelY) > fAccelMag)
+        if (Mathf.Abs(fForceX) + Mathf.Abs(fForceY) > fRunningForce)
         {
-            fAccelX = fAccelX / 2;
-            fAccelY = fAccelY / 2;
+            fForceX = fForceX / 2;
+            fForceY = fForceY / 2;
         }
     }
+
 
     void Move()
     {
-
-        rigidbody.AddForce( Vector3.up * (fAccelY - (9.8f * fFrictionCoefficient * rigidbody.velocity.y) ) );
-
-        rigidbody.AddForce( Vector3.right * (fAccelX - (9.8f * fFrictionCoefficient * rigidbody.velocity.x) ) );
-
-        //rigidbody.AddForce(Vector3.right * fAccelX);
+        rigidbody.AddForce(Vector3.up * (fForceY - (9.8f * rigidbody.mass * fFrictionCoefficient * rigidbody.velocity.y)));
+        rigidbody.AddForce(Vector3.right * (fForceX - (9.8f * rigidbody.mass * fFrictionCoefficient * rigidbody.velocity.x)));
 
         float fVelocityX = rigidbody.velocity.x;
         float fVelocityY = rigidbody.velocity.y;
@@ -245,12 +209,6 @@ public class Tubby : MonoBehaviour {
             }
 
             rigidbody.velocity = new Vector3(fVelocityX, fVelocityY, 0);
-
-            if (ePlayer == PLAYER.PLAYER_1)
-            {
-                Debug.Log(rigidbody.velocity);
-            }
-
         }
 
         Vector3 ScreenPos = oCamera.GetComponent<Camera>().WorldToViewportPoint(transform.position);
@@ -278,5 +236,33 @@ public class Tubby : MonoBehaviour {
             transform.position = oCamera.GetComponent<Camera>().ViewportToWorldPoint(ScreenPos);
             rigidbody.velocity = Vector3.zero;
         }
+
+        if (ePlayer == PLAYER.PLAYER_1)
+        {
+            Debug.Log(rigidbody.velocity);
+        }
     }
+
+    void EatCheck()
+	{			
+		if (ePlayer == PLAYER.PLAYER_1)
+		{
+			if (Input.GetKey(KeyCode.Q))
+			{
+                oGameManager.AddPoints(ePlayer, iStackSize);
+				iStackSize = 0;
+                rigidbody.mass = fPlayerMass;
+			}
+		}
+		else
+		{
+			if (Input.GetKey(KeyCode.RightControl))
+			{
+                oGameManager.AddPoints(ePlayer, iStackSize);
+			    iStackSize = 0;
+                rigidbody.mass = fPlayerMass;
+			}
+		}
+	}
+
 }
