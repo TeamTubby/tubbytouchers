@@ -5,6 +5,7 @@ public class Tubby : MonoBehaviour {
 
     public PLAYER ePlayer;
     public GameObject oCamera;
+
     public float fFrictionCoefficient;
     public float fRunningForce;
     public float fMaxVelocity;
@@ -57,8 +58,15 @@ public class Tubby : MonoBehaviour {
 
     void OnCollisionEnter(Collision a_object)
     {
-        rigidbody.velocity = Vector3.zero;
-        transform.position = oTempPos2;
+        if (a_object.gameObject.tag == "Tubby")
+        {
+            a_object.rigidbody.AddForce( rigidbody.velocity * rigidbody.mass );
+        }
+        else
+        {
+            rigidbody.velocity = Vector3.zero;
+            transform.position = oTempPos2;
+        }
     }
 
     void OnTriggerEnter(Collider a_object)
