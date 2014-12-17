@@ -10,8 +10,12 @@ public class Tubby : MonoBehaviour {
     public float fRunningForce;
     public float fMaxVelocity;
     public float fPlayerMass;
+    public float fReboundVelocity;
+    public float fReboundTime;
 
     private GameManager oGameManager;
+
+    private float fReboundTimer = 0;
 
     private float fFoodMass = 1;
     private int iStackSize = 0;
@@ -54,13 +58,24 @@ public class Tubby : MonoBehaviour {
         ScaleForce();
         Move();
 		EatCheck();
+        UpdateReboundTimer();
 	}
 
     void OnCollisionEnter(Collision a_object)
     {
+
         if (a_object.gameObject.tag == "Tubby")
         {
-            a_object.rigidbody.AddForce( rigidbody.velocity * rigidbody.mass );
+            Vector3 oReboundDir = transform.position - a_object.transform.position;
+            oReboundDir = oReboundDir / oReboundDir.magnitude;
+            Vector3 oOtherReboundDir = a_object.transform.position - transform.position;
+            oOtherReboundDir = oOtherReboundDir / oOtherReboundDir.magnitude;
+
+            rigidbody.velocity = oReboundDir * fReboundVelocity;
+            fReboundTimer = fReboundTime;
+
+            a_object.rigidbody.velocity = oOtherReboundDir * fReboundVelocity;
+            a_object.gameObject.GetComponent<Tubby>().fReboundTimer = a_object.gameObject.GetComponent<Tubby>().fReboundTime;
         }
         else
         {
@@ -82,29 +97,31 @@ public class Tubby : MonoBehaviour {
     void GetForceX()
     {
         fForceX = 0;
-
-        if (ePlayer == PLAYER.PLAYER_1)
+        if (fReboundTimer == 0)
         {
-            if (Input.GetKey(KeyCode.D) || Input.GetAxis("P1_360_leftX") > 0)
+            if (ePlayer == PLAYER.PLAYER_1)
             {
-                fForceX += fRunningForce;
-            }
+                if (Input.GetKey(KeyCode.D) || Input.GetAxis("P1_360_leftX") > 0)
+                {
+                    fForceX += fRunningForce;
+                }
 
-            if (Input.GetKey(KeyCode.A) || Input.GetAxis("P1_360_leftX") < 0)
-            {
-                fForceX -= fRunningForce;
+                if (Input.GetKey(KeyCode.A) || Input.GetAxis("P1_360_leftX") < 0)
+                {
+                    fForceX -= fRunningForce;
+                }
             }
-        }
-        else
-        {
-            if (Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("P2_360_leftX") > 0)
+            else
             {
-                fForceX += fRunningForce;
-            }
+                if (Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("P2_360_leftX") > 0)
+                {
+                    fForceX += fRunningForce;
+                }
 
-            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("P2_360_leftX") < 0)
-            {
-                fForceX -= fRunningForce;
+                if (Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("P2_360_leftX") < 0)
+                {
+                    fForceX -= fRunningForce;
+                }
             }
         }
     }
@@ -112,29 +129,31 @@ public class Tubby : MonoBehaviour {
     void GetForceY()
     {
         fForceY = 0;
-
-        if (ePlayer == PLAYER.PLAYER_1)
+        if (fReboundTimer == 0)
         {
-            if (Input.GetKey(KeyCode.W) || Input.GetAxis("P1_360_leftY") < 0)
+            if (ePlayer == PLAYER.PLAYER_1)
             {
-                fForceY += fRunningForce;
-            }
+                if (Input.GetKey(KeyCode.W) || Input.GetAxis("P1_360_leftY") < 0)
+                {
+                    fForceY += fRunningForce;
+                }
 
-            if (Input.GetKey(KeyCode.S) || Input.GetAxis("P1_360_leftY") > 0)
-            {
-                fForceY -= fRunningForce;
+                if (Input.GetKey(KeyCode.S) || Input.GetAxis("P1_360_leftY") > 0)
+                {
+                    fForceY -= fRunningForce;
+                }
             }
-        }
-        else
-        {
-            if (Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("P2_360_leftY") < 0)
+            else
             {
-                fForceY += fRunningForce;
-            }
+                if (Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("P2_360_leftY") < 0)
+                {
+                    fForceY += fRunningForce;
+                }
 
-            if (Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("P2_360_leftY") > 0)
-            {
-                fForceY -= fRunningForce;
+                if (Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("P2_360_leftY") > 0)
+                {
+                    fForceY -= fRunningForce;
+                }
             }
         }
     }
@@ -244,11 +263,6 @@ public class Tubby : MonoBehaviour {
             transform.position = oCamera.GetComponent<Camera>().ViewportToWorldPoint(ScreenPos);
             rigidbody.velocity = Vector3.zero;
         }
-
-        if (ePlayer == PLAYER.PLAYER_1)
-        {
-            Debug.Log(rigidbody.velocity);
-        }
     }
 
     void EatCheck()
@@ -272,5 +286,17 @@ public class Tubby : MonoBehaviour {
 			}
 		}
 	}
+
+    void UpdateReboundTimer()
+    {
+        if (fReboundTimer > 0)
+        {
+            fReboundTimer -= Time.deltaTime;
+            if (fReboundTimer < 0)
+            {
+                fReboundTimer = 0;
+            }
+        }
+    }
 
 }
