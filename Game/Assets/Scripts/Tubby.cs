@@ -301,7 +301,9 @@ public class Tubby : MonoBehaviour {
 			{
                 if (oGameManager.GetGameTime() > 0)
                 {
-                    oGameManager.AddPoints(ePlayer, iStackSize + (iStackSize - 1));
+                    if( iStackSize > 0 ) {
+                        oGameManager.AddPoints(ePlayer, iStackSize + (iStackSize - 1));
+                    }
                 }
 				iStackSize = 0;
                 rigidbody.mass = fPlayerMass;
@@ -313,7 +315,10 @@ public class Tubby : MonoBehaviour {
 			{
                 if (oGameManager.GetGameTime() > 0)
                 {
-                    oGameManager.AddPoints(ePlayer, iStackSize + ( iStackSize - 1 ));
+                    if (iStackSize > 0)
+                    {
+                        oGameManager.AddPoints(ePlayer, iStackSize + (iStackSize - 1));
+                    }
                 }
 			    iStackSize = 0;
                 rigidbody.mass = fPlayerMass;
