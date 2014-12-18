@@ -12,6 +12,7 @@ public class Tubby : MonoBehaviour {
     public float fPlayerMass;
     public float fReboundVelocity;
     public float fReboundTime;
+    public float fNonReboundTime;
 
     private GameManager oGameManager;
 
@@ -67,15 +68,39 @@ public class Tubby : MonoBehaviour {
         if (a_object.gameObject.tag == "Tubby")
         {
             Vector3 oReboundDir = transform.position - a_object.transform.position;
-            oReboundDir = oReboundDir / oReboundDir.magnitude;
             Vector3 oOtherReboundDir = a_object.transform.position - transform.position;
+
+            oReboundDir = oReboundDir / oReboundDir.magnitude;
             oOtherReboundDir = oOtherReboundDir / oOtherReboundDir.magnitude;
 
-            rigidbody.velocity = oReboundDir * fReboundVelocity;
-            fReboundTimer = fReboundTime;
+            if (Vector3.Dot(rigidbody.velocity, oOtherReboundDir) < Vector3.Dot(a_object.rigidbody.velocity, oReboundDir))
+            {
+                iStackSize = 0;
+                
+                rigidbody.velocity = oReboundDir * fReboundVelocity;
+                a_object.rigidbody.velocity = Vector3.zero;
+                
+                fReboundTimer = fReboundTime;
+                a_object.gameObject.GetComponent<Tubby>().fReboundTimer = a_object.gameObject.GetComponent<Tubby>().fNonReboundTime;
+            }
+            else if (Vector3.Dot(rigidbody.velocity, oOtherReboundDir) > Vector3.Dot(a_object.rigidbody.velocity, oReboundDir))
+            {
+                a_object.gameObject.GetComponent<Tubby>().iStackSize = 0;
 
-            a_object.rigidbody.velocity = oOtherReboundDir * fReboundVelocity;
-            a_object.gameObject.GetComponent<Tubby>().fReboundTimer = a_object.gameObject.GetComponent<Tubby>().fReboundTime;
+                rigidbody.velocity = Vector3.zero;
+                a_object.rigidbody.velocity = oOtherReboundDir * fReboundVelocity;
+
+                fReboundTimer = fNonReboundTime;
+                a_object.gameObject.GetComponent<Tubby>().fReboundTimer = a_object.gameObject.GetComponent<Tubby>().fReboundTime;
+            }
+            else
+            {
+                rigidbody.velocity = oReboundDir * fReboundVelocity;
+                a_object.rigidbody.velocity = oOtherReboundDir * fReboundVelocity;
+
+                fReboundTimer = fReboundTime;
+                a_object.gameObject.GetComponent<Tubby>().fReboundTimer = a_object.gameObject.GetComponent<Tubby>().fReboundTime;
+            }
         }
         else
         {
@@ -305,7 +330,7 @@ public class Tubby : MonoBehaviour {
         //skin.label.alignment = TextAnchor.MiddleCenter;
         Vector3 screenPosition = new Vector3();
 
-        //if (transform.position != null)
+        if (transform.position != null)
             screenPosition = Camera.main.WorldToScreenPoint(transform.position);// gets screen position.
 
         screenPosition.y = Screen.height - screenPosition.y;// inverts y

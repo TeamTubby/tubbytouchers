@@ -3,6 +3,8 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
 
+    public float fGameTime;
+
     private int iPlayer1Score = 0;
     private int iPlayer2Score = 0;
 
