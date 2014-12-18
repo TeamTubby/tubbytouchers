@@ -299,4 +299,18 @@ public class Tubby : MonoBehaviour {
         }
     }
 
+    void OnGUI()
+    {
+        //GUI.skin = skin;
+        //skin.label.alignment = TextAnchor.MiddleCenter;
+        Vector3 screenPosition = new Vector3();
+
+        //if (transform.position != null)
+            screenPosition = Camera.main.WorldToScreenPoint(transform.position);// gets screen position.
+
+        screenPosition.y = Screen.height - screenPosition.y;// inverts y
+
+        GUI.Label(new Rect(screenPosition.x, screenPosition.y, 100, 24), "" + iStackSize);
+    }
+
 }
