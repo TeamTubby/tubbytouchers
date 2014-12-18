@@ -50,6 +50,7 @@
      <Compile Include="Assets\Scripts\Food.cs" />
      <Compile Include="Assets\Scripts\FoodDrops.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
+     <Compile Include="Assets\Scripts\GameOverText.cs" />
      <Compile Include="Assets\Scripts\PlayerScore.cs" />
      <Compile Include="Assets\Scripts\Tubby.cs" />
      <Compile Include="Assets\Scripts\countDown.cs" />

@@ -5,9 +5,6 @@ public class PlayerScore : MonoBehaviour {
 
     public PLAYER ePlayer;
 
-	public int test = 10;
-	//test = 10000;
-
 	// Use this for initialization
 
     private GameManager oGameManager;

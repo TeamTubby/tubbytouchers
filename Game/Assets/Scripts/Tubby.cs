@@ -113,8 +113,11 @@ public class Tubby : MonoBehaviour {
     {
         if (a_object.tag == "Food")
         {
-            iStackSize += 1;
-            rigidbody.mass += fFoodMass;
+            if (oGameManager.GetGameTime() > 0)
+            {
+                iStackSize += 1;
+                rigidbody.mass += fFoodMass;
+            }
             Destroy( a_object.gameObject );
         }
     }
@@ -296,7 +299,10 @@ public class Tubby : MonoBehaviour {
 		{
 			if (Input.GetKey(KeyCode.Q))
 			{
-                oGameManager.AddPoints(ePlayer, iStackSize);
+                if (oGameManager.GetGameTime() > 0)
+                {
+                    oGameManager.AddPoints(ePlayer, iStackSize);
+                }
 				iStackSize = 0;
                 rigidbody.mass = fPlayerMass;
 			}
@@ -305,7 +311,10 @@ public class Tubby : MonoBehaviour {
 		{
 			if (Input.GetKey(KeyCode.RightControl))
 			{
-                oGameManager.AddPoints(ePlayer, iStackSize);
+                if (oGameManager.GetGameTime() > 0)
+                {
+                    oGameManager.AddPoints(ePlayer, iStackSize);
+                }
 			    iStackSize = 0;
                 rigidbody.mass = fPlayerMass;
 			}
@@ -329,10 +338,7 @@ public class Tubby : MonoBehaviour {
         //GUI.skin = skin;
         //skin.label.alignment = TextAnchor.MiddleCenter;
         Vector3 screenPosition = new Vector3();
-
-        if (transform.position != null)
-            screenPosition = Camera.main.WorldToScreenPoint(transform.position);// gets screen position.
-
+        screenPosition = Camera.main.WorldToScreenPoint(transform.position);// gets screen position.
         screenPosition.y = Screen.height - screenPosition.y;// inverts y
 
         GUI.Label(new Rect(screenPosition.x, screenPosition.y, 100, 24), "" + iStackSize);

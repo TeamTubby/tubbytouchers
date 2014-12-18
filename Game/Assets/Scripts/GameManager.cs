@@ -4,6 +4,7 @@ using System.Collections;
 public class GameManager : MonoBehaviour {
 
     public float fGameTime;
+    public float fGameOverTextTimer;
 
     private int iPlayer1Score = 0;
     private int iPlayer2Score = 0;
@@ -14,7 +15,8 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+        UpdateGameTime();
+        CheckGameOver();
 	}
 
     public void AddPoints(PLAYER a_ePlayer, int a_iPoints)
@@ -38,6 +40,32 @@ public class GameManager : MonoBehaviour {
         else
         {
             return iPlayer2Score;
+        }
+    }
+
+    void UpdateGameTime()
+    {
+        fGameTime -= Time.deltaTime;
+        if (fGameTime < 0)
+        {
+            fGameTime = 0;
+        }
+    }
+
+    public float GetGameTime()
+    {
+        return fGameTime;
+    }
+
+    void CheckGameOver()
+    {
+        if (fGameTime == 0)
+        {
+            fGameOverTextTimer -= Time.deltaTime;
+            if (fGameOverTextTimer <= 0)
+            {
+                Application.LoadLevel(0);
+            }
         }
     }
 }
