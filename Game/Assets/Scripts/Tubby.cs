@@ -6,6 +6,8 @@ public class Tubby : MonoBehaviour {
     public PLAYER ePlayer;
     public GameObject oCamera;
 
+	public AudioClip EatSound;
+
     public float fFrictionCoefficient;
     public float fRunningForce;
     public float fMaxVelocity;
@@ -303,6 +305,7 @@ public class Tubby : MonoBehaviour {
                 {
                     if( iStackSize > 0 ) {
                         oGameManager.AddPoints(ePlayer, iStackSize + (iStackSize - 1));
+						audio.PlayOneShot(EatSound);
                     }
                 }
 				iStackSize = 0;
@@ -318,6 +321,7 @@ public class Tubby : MonoBehaviour {
                     if (iStackSize > 0)
                     {
                         oGameManager.AddPoints(ePlayer, iStackSize + (iStackSize - 1));
+						audio.PlayOneShot(EatSound);
                     }
                 }
 			    iStackSize = 0;

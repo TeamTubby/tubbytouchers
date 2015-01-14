@@ -1,4 +1,6 @@
 ﻿var isQuit=false;
+var isBack=false;
+var isHelp=false;
 
 function OnMouseEnter(){
 	//change text color
@@ -15,6 +17,14 @@ function OnMouseUp(){
 	if (isQuit==true) {
 		//quit the game
 		Application.Quit();
+	}
+	else if (isBack==true) {
+		//quit the game
+		Application.LoadLevel(0);
+	}
+	else if (isHelp==true) {
+		//quit the game
+		Application.LoadLevel(2);
 	}
 	else {
 		//load level
