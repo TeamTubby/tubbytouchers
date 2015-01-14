@@ -346,7 +346,7 @@ public class Tubby : MonoBehaviour {
         screenPosition = Camera.main.WorldToScreenPoint(transform.position);// gets screen position.
         screenPosition.y = Screen.height - screenPosition.y;// inverts y
 
-        GUI.Label(new Rect(screenPosition.x, screenPosition.y, 100, 24), "" + iStackSize);
+        GUI.Label(new Rect(screenPosition.x, screenPosition.y-20, 100, 24), "" + iStackSize);
     }
 
 }

@@ -1,10 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Tubby.cs">
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Food.cs">
     <Files>
-      <File FileName="Assets\Scripts\Player1Score.cs" Line="12" Column="3" />
-      <File FileName="Assets\Scripts\Tubby.cs" Line="85" Column="6" />
-      <File FileName="Assets\Scripts\countDown.cs" Line="6" Column="28" />
+      <File FileName="Assets\Scripts\Food.cs" Line="10" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
