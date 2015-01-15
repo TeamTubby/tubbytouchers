@@ -66,11 +66,11 @@ public class FoodDrops : MonoBehaviour {
 		{
 			GameObject[] oFood; 
 			oFood = GameObject.FindGameObjectsWithTag("Food");
-			int iFoodCount = 0;
+			int iFoodCount = oFood.Length;
 
-			foreach( GameObject o in oFood ){
+			/*foreach( GameObject o in oFood ){
 				iFoodCount ++;
-			}
+			}*/
 
 			if( iFoodCount < iMaxFood )
 			{
@@ -82,7 +82,7 @@ public class FoodDrops : MonoBehaviour {
 			FoodPositionCheck:
 				foreach( GameObject o in oFood )
 				{
-					Vector3 oTemp = o.transform.position;
+					//Vector3 oTemp = o.transform.position;
 					if( o.transform.position == pos ) {
 						pos.x += fFoodOffset;
 						goto FoodPositionCheck;
