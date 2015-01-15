@@ -16,6 +16,9 @@ public class Tubby : MonoBehaviour {
     public float fReboundTime;
     public float fNonReboundTime;
 
+    public Texture StandingTexture;
+    public Texture KnockedDownTexture;
+
     private GameManager oGameManager;
 
     private float fReboundTimer = 0;
@@ -25,6 +28,9 @@ public class Tubby : MonoBehaviour {
 
     private float fForceX = 0;
     private float fForceY = 0;
+
+    private float fPolarAngle = Mathf.Asin(-1);
+    private Vector3 fPreviousPosition;
 
     Vector3 oTempPos1;
     Vector3 oTempPos2;
@@ -45,7 +51,7 @@ public class Tubby : MonoBehaviour {
 		}
 
         rigidbody.mass = fPlayerMass;
-
+        fPreviousPosition = transform.position;
 	}
 
     void FixedUpdate()
@@ -56,10 +62,12 @@ public class Tubby : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        Debug.Log(fPolarAngle);
         GetForceX();
         GetForceY();
         ScaleForce();
         Move();
+        Rotate();
 		EatCheck();
         UpdateReboundTimer();
 	}
@@ -78,6 +86,8 @@ public class Tubby : MonoBehaviour {
             if (Vector3.Dot(rigidbody.velocity, oOtherReboundDir) < Vector3.Dot(a_object.rigidbody.velocity, oReboundDir))
             {
                 iStackSize = 0;
+                rigidbody.mass = fPlayerMass;
+                renderer.material.mainTexture = KnockedDownTexture;
                 
                 rigidbody.velocity = oReboundDir * fReboundVelocity;
                 a_object.rigidbody.velocity = Vector3.zero;
@@ -88,6 +98,8 @@ public class Tubby : MonoBehaviour {
             else if (Vector3.Dot(rigidbody.velocity, oOtherReboundDir) > Vector3.Dot(a_object.rigidbody.velocity, oReboundDir))
             {
                 a_object.gameObject.GetComponent<Tubby>().iStackSize = 0;
+                a_object.gameObject.GetComponent<Tubby>().rigidbody.mass = a_object.gameObject.GetComponent<Tubby>().fPlayerMass;
+                a_object.gameObject.GetComponent<Tubby>().renderer.material.mainTexture = a_object.gameObject.GetComponent<Tubby>().KnockedDownTexture;
 
                 rigidbody.velocity = Vector3.zero;
                 a_object.rigidbody.velocity = oOtherReboundDir * fReboundVelocity;
@@ -339,6 +351,26 @@ public class Tubby : MonoBehaviour {
             {
                 fReboundTimer = 0;
             }
+        }
+        else if( renderer.material.mainTexture != StandingTexture )
+        {
+            renderer.material.mainTexture = StandingTexture;
+        }
+    }
+
+    void Rotate()
+    {
+        if (transform.position != fPreviousPosition)
+        {
+            float fNewPolarAngle = Mathf.Atan((transform.position.y - fPreviousPosition.y) / (transform.position.x - fPreviousPosition.x));
+
+            if (transform.position.x < fPreviousPosition.x)
+            {
+                fNewPolarAngle = fNewPolarAngle + Mathf.PI;
+            }
+            transform.Rotate(0, 0, (fNewPolarAngle - fPolarAngle) * (180 / Mathf.PI));
+            fPolarAngle = fNewPolarAngle;
+            fPreviousPosition = transform.position;
         }
     }
 

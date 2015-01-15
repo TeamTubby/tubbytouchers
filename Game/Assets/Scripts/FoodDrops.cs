@@ -59,7 +59,6 @@ public class FoodDrops : MonoBehaviour {
 
 	public GameObject prefab;
 	public int numberOfObjects = 20;
-	public float radius = 5f;
 
 	void foodDrop() {
 		for (int i = 0; i < numberOfObjects; i++)
@@ -67,10 +66,6 @@ public class FoodDrops : MonoBehaviour {
 			GameObject[] oFood; 
 			oFood = GameObject.FindGameObjectsWithTag("Food");
 			int iFoodCount = oFood.Length;
-
-			/*foreach( GameObject o in oFood ){
-				iFoodCount ++;
-			}*/
 
 			if( iFoodCount < iMaxFood )
 			{
