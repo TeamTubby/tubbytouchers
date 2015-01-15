@@ -64,13 +64,12 @@ public class FoodDrops : MonoBehaviour {
 	void foodDrop() {
 		for (int i = 0; i < numberOfObjects; i++)
 		{
-			object[] oFood = GameObject.FindGameObjectsWithTag("Food");
+			GameObject[] oFood; 
+			oFood = GameObject.FindGameObjectsWithTag("Food");
 			int iFoodCount = 0;
-			Debug.Log("First");
 
-			foreach( object o in oFood ){
+			foreach( GameObject o in oFood ){
 				iFoodCount ++;
-				Debug.Log("First2");
 			}
 
 			if( iFoodCount < iMaxFood )
@@ -79,21 +78,18 @@ public class FoodDrops : MonoBehaviour {
 				iIndex = Random.Range(0, 9);
 				Vector3 pos = oTablePos[iIndex];
 				pos.x -= fFoodOffset;
-				Debug.Log("First3");
 
 			FoodPositionCheck:
-				foreach( object o in oFood )
+				foreach( GameObject o in oFood )
 				{
-					//Vector3 oTemp = o.GetComponent<GameObject>();
-					//Vector3 oTemp = o;
-					Debug.Log (o);
-					//if( o.transform.position == pos ) {
-						//pos.x += fFoodOffset;
-						//goto FoodPositionCheck;
+					Vector3 oTemp = o.transform.position;
+					if( o.transform.position == pos ) {
+						pos.x += fFoodOffset;
+						goto FoodPositionCheck;
+					}
 				}
 				Instantiate(prefab, pos, Quaternion.identity);
 			}
-				//
 		}
 	}
 }
