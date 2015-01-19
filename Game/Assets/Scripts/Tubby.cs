@@ -7,6 +7,7 @@ public class Tubby : MonoBehaviour {
     public GameObject oCamera;
 
 	public AudioClip EatSound;
+	public AudioClip FoodPickup;
 
     public float fFrictionCoefficient;
     public float fRunningForce;
@@ -43,11 +44,11 @@ public class Tubby : MonoBehaviour {
 
 		if (ePlayer == PLAYER.PLAYER_1)
 		{
-        	renderer.material.color = new Color(0, 1, 0);
+        	//renderer.material.color = new Color(0, 1, 0);
 		}
 		if (ePlayer == PLAYER.PLAYER_2)
 		{
-			renderer.material.color = new Color(0, 0, 1);
+			//renderer.material.color = new Color(0, 0, 1);
 		}
 
         rigidbody.mass = fPlayerMass;
@@ -62,7 +63,7 @@ public class Tubby : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        Debug.Log(fPolarAngle);
+        //Debug.Log(fPolarAngle);
         GetForceX();
         GetForceY();
         ScaleForce();
@@ -131,6 +132,7 @@ public class Tubby : MonoBehaviour {
             {
                 iStackSize += 1;
                 rigidbody.mass += fFoodMass;
+				audio.PlayOneShot(FoodPickup);
             }
             Destroy( a_object.gameObject );
         }
