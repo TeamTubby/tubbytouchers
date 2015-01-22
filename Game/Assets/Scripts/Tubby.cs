@@ -45,21 +45,13 @@ public class Tubby : MonoBehaviour
         GameObject Temp = GameObject.Find("GameManager");
         oGameManager = Temp.GetComponent<GameManager>();
 
-        if (ePlayer == PLAYER.PLAYER_1)
-        {
-            //renderer.material.color = new Color(0, 1, 0);
-        }
-        if (ePlayer == PLAYER.PLAYER_2)
-        {
-            //renderer.material.color = new Color(0, 0, 1);
-        }
-
         rigidbody.mass = fPlayerMass;
         fPreviousPosition = transform.position;
     }
 
     void FixedUpdate()
     {
+        //Update fixed update positions
         oTempPos2 = oTempPos1;
         oTempPos1 = transform.position;
     }
@@ -67,7 +59,6 @@ public class Tubby : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(fPolarAngle);
         GetForceX();
         GetForceY();
         ScaleForce();
@@ -80,14 +71,20 @@ public class Tubby : MonoBehaviour
     void OnCollisionEnter(Collision a_object)
     {
 
+        //If colliding with othe player
         if (a_object.gameObject.tag == "Tubby")
         {
+            //Calculate rebound directions for self and other tubby
             Vector3 oReboundDir = transform.position - a_object.transform.position;
             Vector3 oOtherReboundDir = a_object.transform.position - transform.position;
 
+            //Normalise rebound directions
             oReboundDir = oReboundDir / oReboundDir.magnitude;
             oOtherReboundDir = oOtherReboundDir / oOtherReboundDir.magnitude;
 
+            //If other tubby is travelling faster, drop food
+            //Immobilise self and other tubby accordingly
+            //Change texture to knocked over texture
             if (Vector3.Dot(rigidbody.velocity, oOtherReboundDir) < Vector3.Dot(a_object.rigidbody.velocity, oReboundDir))
             {
                 iStackSize = 0;
@@ -100,6 +97,10 @@ public class Tubby : MonoBehaviour
                 fReboundTimer = fReboundTime;
                 a_object.gameObject.GetComponent<Tubby>().fReboundTimer = a_object.gameObject.GetComponent<Tubby>().fNonReboundTime;
             }
+
+            //If travelling faster than other tubby, make other tubby drop food
+            //Immobilise self and other accordingly
+            //Set other tubby texture to knocked over texture
             else if (Vector3.Dot(rigidbody.velocity, oOtherReboundDir) > Vector3.Dot(a_object.rigidbody.velocity, oReboundDir))
             {
                 a_object.gameObject.GetComponent<Tubby>().iStackSize = 0;
@@ -112,6 +113,9 @@ public class Tubby : MonoBehaviour
                 fReboundTimer = fNonReboundTime;
                 a_object.gameObject.GetComponent<Tubby>().fReboundTimer = a_object.gameObject.GetComponent<Tubby>().fReboundTime;
             }
+
+            //If both tubbies are moving at the same speed, neither drops food
+            //Both immobilised for rebound time
             else
             {
                 rigidbody.velocity = oReboundDir * fReboundVelocity;
@@ -121,6 +125,9 @@ public class Tubby : MonoBehaviour
                 a_object.gameObject.GetComponent<Tubby>().fReboundTimer = a_object.gameObject.GetComponent<Tubby>().fReboundTime;
             }
         }
+        //If colliding with an obstacle, stop moving and set position back to oTempPos2
+        //Needs to be 2 fixed updates because we can't ensure oTempPos1 was updated prior to collision detection
+        //oTempPos2 will contain either the position of the tubby either 1 or 2 fixed updates ago, depending on when the collision is detected
         else
         {
             rigidbody.velocity = Vector3.zero;
@@ -129,6 +136,7 @@ public class Tubby : MonoBehaviour
         }
     }
 
+    //When colliding with food, increase mass, increase stack size and destroy food object
     void OnTriggerEnter(Collider a_object)
     {
         if (a_object.tag == "Food")
@@ -143,6 +151,7 @@ public class Tubby : MonoBehaviour
         }
     }
 
+    //Get the x component of the player's movement input
     void GetForceX()
     {
         fForceX = 0;
@@ -175,6 +184,7 @@ public class Tubby : MonoBehaviour
         }
     }
 
+    //Get the y component of the player's movement input
     void GetForceY()
     {
         fForceY = 0;
@@ -207,6 +217,8 @@ public class Tubby : MonoBehaviour
         }
     }
 
+    //Halve the x and y force if both are non-zero
+    //Necessary otherwise players will accelerate faster when they move diagonally than when they move horizontally or vertically
     void ScaleForce()
     {
         if (Mathf.Abs(fForceX) + Mathf.Abs(fForceY) > fRunningForce)
@@ -216,7 +228,7 @@ public class Tubby : MonoBehaviour
         }
     }
 
-
+    //Modify velocity based off scaled x and y forces
     void Move()
     {
         rigidbody.AddForce(Vector3.up * (fForceY - (9.8f * rigidbody.mass * fFrictionCoefficient * rigidbody.velocity.y)));
@@ -226,6 +238,7 @@ public class Tubby : MonoBehaviour
         float fVelocityY = rigidbody.velocity.y;
         float fVelocityMag = Mathf.Sqrt(Mathf.Pow(fVelocityX, 2) + Mathf.Pow(fVelocityY, 2));
 
+        //Clamp movement speed to fMaxVelocity
         if (fVelocityMag > fMaxVelocity)
         {
             float fRadians = Mathf.Atan(fVelocityY / fVelocityX);
@@ -287,6 +300,7 @@ public class Tubby : MonoBehaviour
             rigidbody.velocity = new Vector3(fVelocityX, fVelocityY, 0);
         }
 
+        //Stop player from moving outside of camera bounds
         Vector3 ScreenPos = oCamera.GetComponent<Camera>().WorldToViewportPoint(transform.position);
         if (ScreenPos.x < 0)
         {
@@ -314,8 +328,11 @@ public class Tubby : MonoBehaviour
         }
     }
 
+    //Check if player has pressed the eat key
     void EatCheck()
     {
+        //Increase player's score according to how much food they are currently holding
+        //Drop stack size to 0 and restore player mass to default mass
         if (ePlayer == PLAYER.PLAYER_1)
         {
             if (Input.GetKey(KeyCode.Q))
@@ -350,6 +367,7 @@ public class Tubby : MonoBehaviour
         }
     }
 
+    //Update time that player has been immobilised for
     void UpdateReboundTimer()
     {
         if (fReboundTimer > 0)
@@ -360,12 +378,14 @@ public class Tubby : MonoBehaviour
                 fReboundTimer = 0;
             }
         }
+        //Set player texture to standing texture if he is getting up from being knocked over
         else if (renderer.material.mainTexture != StandingTexture)
         {
             renderer.material.mainTexture = StandingTexture;
         }
     }
 
+    //Update tubby sprite rotation based off previous and current position
     void Rotate()
     {
         if (!bBlocked)
@@ -389,6 +409,7 @@ public class Tubby : MonoBehaviour
         fPreviousPosition = transform.position;
     }
 
+    //Write food stack size on player
     void OnGUI()
     {
         Vector3 screenPosition = new Vector3();
