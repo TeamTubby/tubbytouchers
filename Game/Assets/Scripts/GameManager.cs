@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour {
 	void Update () {
         UpdateGameTime();
         CheckGameOver();
+        CheckEscape();
 	}
 
     public void AddPoints(PLAYER a_ePlayer, int a_iPoints)
@@ -66,6 +67,14 @@ public class GameManager : MonoBehaviour {
             {
                 Application.LoadLevel(0);
             }
+        }
+    }
+
+    void CheckEscape()
+    {
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            Application.LoadLevel(0);
         }
     }
 }
