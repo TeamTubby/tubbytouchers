@@ -31,6 +31,7 @@ public class Tubby : MonoBehaviour {
     private float fForceY = 0;
 
     private float fPolarAngle = Mathf.Asin(-1);
+    private bool bBlocked = false;
     private Vector3 fPreviousPosition;
 
     Vector3 oTempPos1;
@@ -121,6 +122,7 @@ public class Tubby : MonoBehaviour {
         {
             rigidbody.velocity = Vector3.zero;
             transform.position = oTempPos2;
+            bBlocked = true;
         }
     }
 
@@ -362,18 +364,25 @@ public class Tubby : MonoBehaviour {
 
     void Rotate()
     {
-        if (transform.position != fPreviousPosition)
+        if (!bBlocked)
         {
-            float fNewPolarAngle = Mathf.Atan((transform.position.y - fPreviousPosition.y) / (transform.position.x - fPreviousPosition.x));
-
-            if (transform.position.x < fPreviousPosition.x)
+            if (transform.position != fPreviousPosition)
             {
-                fNewPolarAngle = fNewPolarAngle + Mathf.PI;
+                float fNewPolarAngle = Mathf.Atan((transform.position.y - fPreviousPosition.y) / (transform.position.x - fPreviousPosition.x));
+
+                if (transform.position.x < fPreviousPosition.x)
+                {
+                    fNewPolarAngle = fNewPolarAngle + Mathf.PI;
+                }
+                transform.Rotate(0, 0, (fNewPolarAngle - fPolarAngle) * (180 / Mathf.PI));
+                fPolarAngle = fNewPolarAngle;
             }
-            transform.Rotate(0, 0, (fNewPolarAngle - fPolarAngle) * (180 / Mathf.PI));
-            fPolarAngle = fNewPolarAngle;
-            fPreviousPosition = transform.position;
         }
+        else
+        {
+            bBlocked = false;
+        }
+        fPreviousPosition = transform.position;
     }
 
     void OnGUI()
