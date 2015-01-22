@@ -12,6 +12,10 @@ public class FoodDrops : MonoBehaviour {
 
 	private int iRand;
 	public int iMaxFood;
+
+    public GameObject prefab1;
+    public GameObject prefab2;
+    public int numberOfObjects = 20;
 	
 	// Update is called once per frame
 	void Update () {
@@ -52,13 +56,7 @@ public class FoodDrops : MonoBehaviour {
 		Temp = GameObject.Find("Table9");
 		oTablePos [8] = Temp.transform.position;
 
-		//Debug.Log (oTablePos[1]);
-
-		//oTablePos = 
 		}
-
-	public GameObject prefab;
-	public int numberOfObjects = 20;
 
 	void foodDrop() {
 		for (int i = 0; i < numberOfObjects; i++)
@@ -83,7 +81,15 @@ public class FoodDrops : MonoBehaviour {
 						goto FoodPositionCheck;
 					}
 				}
-				Instantiate(prefab, pos, Quaternion.identity);
+                iIndex = Random.Range(0, 2);
+                if (iIndex == 0)
+                {
+                    Instantiate(prefab1, pos, Quaternion.identity);
+                }
+                else
+                {
+                    Instantiate(prefab2, pos, Quaternion.identity);
+                }
 			}
 		}
 	}
